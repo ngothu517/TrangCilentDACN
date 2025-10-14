@@ -1,0 +1,60 @@
+@import "tailwindcss";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #3c2f2f; /* Nâu đậm cho chữ */
+  background-color: #F7D9A7; /* Màu vàng nền */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #b77c25;
+  text-decoration: none;
+}
+a:hover {
+  color: #9b5c00;
+}
+
+body {
+  margin: 0;
+       
+
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #F7D9A7;
+}
+
+
+h1 {
+  font-size: 2.2em;
+  line-height: 1.1;
+  color: #4b3b27;
+}
+
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #b77c25;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+button:hover {
+  background-color: #9b5c00;
+}
