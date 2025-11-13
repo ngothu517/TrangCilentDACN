@@ -1,17 +1,25 @@
-import React, { useState } from "react";
-import { Menu, ShoppingBag, User, X, Search } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Menu, ShoppingBag, User, X, Search, Camera } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [user, setUser] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Lấy thông tin user từ localStorage
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) setUser(savedUser);
+  }, []);
 
   const menuItems = [
     { key: "home", label: "Trang chủ", path: "/" },
     { key: "shop", label: "Sản phẩm", path: "/shop" },
     { key: "about", label: "Giới thiệu", path: "/about" },
-    { key: "contact", label: "Liên hệ", path: "/contact" },
+    { key: "contact", label: "Thông tin tài khoản", path: "/profile" },
   ];
 
   const handleSearch = (e) => {
@@ -20,6 +28,14 @@ export default function Navbar() {
       navigate(`/search?query=${encodeURIComponent(search)}`);
       setSearch("");
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    alert("✅ Bạn đã đăng xuất!");
+    navigate("/login");
+    setDropdownOpen(false);
+    setUser(null);
   };
 
   return (
@@ -35,13 +51,13 @@ export default function Navbar() {
 
         <h1
           onClick={() => navigate("/")}
-          className="text-xs font-bold text-[#4b3b27] cursor-pointer tracking-tight"
+          className="text-xs font-bold text-[#4b3b27] cursor-pointer tracking-tight flex items-center gap-1"
         >
           Fashion<span className="text-[#8b5a1e]">Shop</span>
         </h1>
       </div>
 
-      {/* Thanh tìm kiếm (ẩn trên mobile nhỏ) */}
+      {/* Search */}
       <form
         onSubmit={handleSearch}
         className="hidden sm:flex items-center bg-white border border-[#e6c97b] rounded-full px-3 py-1 w-64 lg:w-80"
@@ -54,15 +70,22 @@ export default function Navbar() {
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 px-2 text-xs outline-none bg-transparent text-[#4b3b27]"
         />
-        <button
-          type="submit"
-          className="bg-[#8b5a1e] text-white px-3 py-1 text-xs rounded-full hover:bg-[#a76d2b]"
-        >
-          Tìm
-        </button>
+        <div className="flex gap-2 items-center">
+          <div 
+            className="cursor-pointer text-[#8b5a1e] hover:text-[#a76d2b]"
+            onClick={() => navigate("/camera-search")}>
+            <Camera size={20} className="text-[#8b5a1e]" />
+          </div> 
+          <button
+            type="submit"
+            className="bg-[#8b5a1e] text-white px-3 py-1 text-xs rounded-full hover:bg-[#a76d2b]"
+          >
+            Tìm
+          </button>
+        </div>
       </form>
 
-      {/* Menu chính (desktop) */}
+      {/* Menu desktop */}
       <nav className="hidden md:flex items-center gap-5">
         {menuItems.map((item) => (
           <Link
@@ -75,8 +98,8 @@ export default function Navbar() {
         ))}
       </nav>
 
-      {/* Nút hành động */}
-      <div className="flex items-center gap-2">
+      {/* Hành động */}
+      <div className="flex items-center gap-2 relative">
         <button
           onClick={() => navigate("/cart")}
           className="flex items-center gap-1 bg-[#8b5a1e] text-white px-2.5 py-1 rounded hover:bg-[#a76d2b]"
@@ -85,13 +108,41 @@ export default function Navbar() {
           <span className="hidden sm:inline text-xs">Giỏ</span>
         </button>
 
-        <button
-          onClick={() => navigate("/login")}
-          className="flex items-center gap-1 border border-[#8b5a1e] px-2.5 py-1 rounded text-[#4b3b27] hover:bg-[#fde68a]"
-        >
-          <User size={14} />
-          <span className="hidden sm:inline text-xs">Đăng nhập</span>
-        </button>
+        {user ? (
+          <div
+            className="relative"
+            onMouseEnter={() => setDropdownOpen(true)}
+            onMouseLeave={() => setDropdownOpen(false)}
+          >
+            <button className="flex items-center gap-1 border border-[#8b5a1e] px-2.5 py-1 rounded text-[#4b3b27] hover:bg-[#fde68a]">
+              <User size={14} />
+              <span className="hidden sm:inline text-xs">{user.username}</span>
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                <div className="p-4 border-b border-gray-100">
+                  <p className="text-sm font-semibold text-gray-800">{user.username}</p>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                >
+                  Đăng xuất
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={() => navigate("/login")}
+            className="flex items-center gap-1 border border-[#8b5a1e] px-2.5 py-1 rounded text-[#4b3b27] hover:bg-[#fde68a]"
+          >
+            <User size={14} />
+            <span className="hidden sm:inline text-xs">Đăng nhập</span>
+          </button>
+        )}
       </div>
 
       {/* Menu mobile */}
@@ -135,19 +186,32 @@ export default function Navbar() {
                 setSidebarOpen(false);
                 navigate("/cart");
               }}
-              className="flex items-center gap-1 bg-[#8b5a1e] text-white px-3 py-1 rounded hover:bg-[#a76d2b]"
+              className="flex items-center gap-1 bg-[#8b5a1e] text-white rounded hover:bg-[#a76d2b]"
             >
-              <ShoppingBag size={14} /> Giỏ hàng
+              <ShoppingBag size={14} />Giỏ hàng
             </button>
-            <button
-              onClick={() => {
-                setSidebarOpen(false);
-                navigate("/login");
-              }}
-              className="flex items-center gap-1 border border-[#8b5a1e] px-3 py-1 rounded text-[#4b3b27] hover:bg-[#fde68a]"
-            >
-              <User size={14} /> Đăng nhập
-            </button>
+
+            {user ? (
+              <button
+                onClick={() => {
+                  setSidebarOpen(false);
+                  navigate("/profile");
+                }}
+                className="flex items-center gap-1 border border-[#8b5a1e] px-3 py-1 rounded text-[#4b3b27] hover:bg-[#fde68a]"
+              >
+                <User size={14} /> {user.username}
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setSidebarOpen(false);
+                  navigate("/login");
+                }}
+                className="flex items-center gap-1 border border-[#8b5a1e] px-3 py-1 rounded text-[#4b3b27] hover:bg-[#fde68a]"
+              >
+                <User size={14} /> Đăng nhập
+              </button>
+            )}
           </div>
         </div>
       )}

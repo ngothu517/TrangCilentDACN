@@ -40,33 +40,40 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#f8e6c1] border-t-2 border-[#8b5a1e] text-[#4b3b27]">
-      {/* Sản phẩm nổi bật */}
+      {/* = SẢN PHẨM NỔI BẬT */}
       <div className="max-w-6xl mx-auto px-6 py-6">
-        <h3 className="text-2xl font-bold text-center mb-4">Sản phẩm nổi bật</h3>
+        <h3 className="text-2xl font-bold text-center mb-5">
+          Sản phẩm nổi bật
+        </h3>
+
         <Slider {...settings}>
           {products.map((item) => (
             <div key={item.id} className="px-2">
-              <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-[#f0d9a6] hover:shadow-md transition-all">
-                <div className="w-full aspect-[3/4] overflow-hidden">
+              <div className="bg-white border border-[#f0d9a6] rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                <div className="w-full rounded-lg aspect-square overflow-hidden">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                   />
                 </div>
+
+                {/* 📄 Thông tin */}
                 <div className="p-2 flex flex-col gap-1">
-                  <h4 className="font-semibold text-[#4b3b27] text-ms truncate">{item.name}</h4>
+                  <h4 className="font-semibold text-[#4b3b27] text-sm truncate">
+                    {item.name}
+                  </h4>
                   <p className="text-[#8b5a1e] font-bold text-xs">{item.price}</p>
+
+                  {/* 🔘 Nút hành động */}
                   <div className="flex justify-between items-center mt-1">
                     <button
                       onClick={() => navigate(`/product/${item.id}`)}
-                      className="bg-[#f8e6c1] text-[#4b3b27] px-2 py-1 rounded hover:bg-[#fde68a] text-xs"
+                      className="bg-[#f8e6c1] text-[#4b3b27] px-2 py-[3px] rounded-md hover:bg-[#fde68a] text-[10px] transition"
                     >
-                      Xem chi tiết
+                      Xem
                     </button>
-                    <button className="p-1 rounded-full hover:bg-[#fde68a]">
-                      <Heart size={14} className="text-[#8b5a1e]" />
-                    </button>
+                    
                   </div>
                 </div>
               </div>
@@ -75,7 +82,7 @@ export default function Footer() {
         </Slider>
       </div>
 
-      {/* Footer thông tin */}
+      {/* FOOTE */}
       <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Cột 1 */}
         <div>
@@ -105,13 +112,13 @@ export default function Footer() {
           <div className="flex gap-3">
             <a
               href="#"
-              className="p-2 rounded-full bg-white border border-[#e6c97b] hover:bg-[#fde68a]"
+              className="p-2 rounded-full bg-white border border-[#e6c97b] hover:bg-[#fde68a] transition"
             >
               <Facebook size={18} />
             </a>
             <a
               href="#"
-              className="p-2 rounded-full bg-white border border-[#e6c97b] hover:bg-[#fde68a]"
+              className="p-2 rounded-full bg-white border border-[#e6c97b] hover:bg-[#fde68a] transition"
             >
               <Instagram size={18} />
             </a>

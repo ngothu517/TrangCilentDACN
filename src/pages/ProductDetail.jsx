@@ -11,21 +11,21 @@ const products = [
   {
     id: 1,
     name: "Áo thun nam basic",
-    price: "199.000₫",
+    price: 199000,
     image: aoThun,
     subImages: [aoSomi, aoNu, aoThun, aoSomi],
   },
   {
     id: 2,
     name: "Áo sơ mi nữ trắng",
-    price: "259.000₫",
+    price: 259000,
     image: aoSomi,
     subImages: [aoThun, aoNu, aoSomi, aoThun],
   },
   {
     id: 3,
     name: "Quần jean xanh",
-    price: "349.000₫",
+    price: 349000,
     image: aoNu,
     subImages: [aoThun, aoSomi, aoNu, aoThun],
   },
@@ -43,9 +43,66 @@ export default function ProductDetail() {
   const colors = ["#FF0000", "#0000FF", "#FFFFFF", "#000000", "#FFD600"];
 
   const product = products.find((p) => p.id === parseInt(id)) || products[0];
-
-  // Ảnh chính mặc định là ảnh gốc
   const displayImage = mainImage || product.image;
+
+  // Thêm vào giỏ hàng → bắt buộc chọn size + màu
+  const handleAddToCart = () => {
+    if (!selectedSize || !selectedColor) {
+      alert("Vui lòng chọn kích thước và màu sắc!");
+      return; // dừng hàm nếu chưa chọn
+    }
+
+    const newItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      size: selectedSize,
+      color: selectedColor,
+      quantity: 1,
+    };
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingIndex = cart.findIndex(
+      (item) =>
+        item.id === newItem.id &&
+        item.size === newItem.size &&
+        item.color === newItem.color
+    );
+
+    if (existingIndex >= 0) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push(newItem);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("✅ Đã thêm vào giỏ hàng!");
+    navigate("/cart"); // chuyển sang trang giỏ hàng
+  };
+
+  // Mua ngay → chỉ mua sản phẩm này, bắt buộc chọn size + màu
+  const handleBuyNow = () => {
+    if (!selectedSize || !selectedColor) {
+      alert("Vui lòng chọn kích thước và màu sắc!");
+      return; 
+    }
+
+    const buyNowItem = [
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        size: selectedSize,
+        color: selectedColor,
+        quantity: 1,
+      },
+    ];
+
+    sessionStorage.setItem("buyNow", JSON.stringify(buyNowItem));
+    navigate("/order"); // chuyển sang trang thanh toán
+  };
 
   return (
     <div className="min-h-screen bg-[#FFF8E7] flex items-center justify-center p-4 md:p-8">
@@ -86,7 +143,9 @@ export default function ProductDetail() {
         <div className="flex-1 flex flex-col justify-between">
           <div>
             <h2 className="text-2xl font-bold text-[#4b3b27]">{product.name}</h2>
-            <p className="text-[#8b5a1e] font-semibold text-xl mt-1">{product.price}</p>
+            <p className="text-[#8b5a1e] font-semibold text-xl mt-1">
+              {product.price.toLocaleString("vi-VN")}₫
+            </p>
             <p className="text-[#4b3b27] text-sm md:text-base mt-3 leading-relaxed">
               Đây là mô tả sản phẩm ngắn gọn. Thêm thông tin chi tiết về chất liệu, hướng dẫn sử dụng
               và bảo quản sản phẩm để khách hàng hiểu rõ hơn.
@@ -134,10 +193,16 @@ export default function ProductDetail() {
 
           {/* Nút hành động */}
           <div className="flex gap-4 mt-8">
-            <button className="flex-1 px-4 py-3 bg-[#8b5a1e] text-white rounded-lg hover:bg-[#a76d2b] text-sm font-medium shadow">
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 px-4 py-3 bg-[#8b5a1e] text-white rounded-lg hover:bg-[#a76d2b] text-sm font-medium shadow"
+            >
               Thêm vào giỏ
             </button>
-            <button className="flex-1 px-4 py-3 bg-[#fde68a] text-[#4b3b27] rounded-lg hover:bg-[#fcd34d] text-sm font-medium shadow">
+            <button
+              onClick={handleBuyNow}
+              className="flex-1 px-4 py-3 bg-[#fde68a] text-[#4b3b27] rounded-lg hover:bg-[#fcd34d] text-sm font-medium shadow"
+            >
               Mua ngay
             </button>
             <button className="p-3 rounded-full border border-[#8b5a1e] hover:bg-[#fde68a] shadow">

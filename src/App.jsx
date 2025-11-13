@@ -7,6 +7,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import About from "./pages/About";
 import ScrollToTop from "./components/ScrollToTop";
+import Order from "./pages/Order";
+import Profile from "./pages/Profile";
+import OrderDetail from "./pages/OrderDetail";
 export default function App() {
   return (
     <Router>
@@ -20,6 +23,9 @@ export default function App() {
             <Route path="/about" element={<About />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/order/:id" element={<OrderDetail />} />
           </Routes>
         </main>
         <Footer />
