@@ -10,6 +10,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import OrderDetail from "./pages/OrderDetail";
+import ChatBot from "./components/ChatBot";
 export default function App() {
   return (
     <Router>
@@ -29,6 +30,7 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
+        <ChatBot/>
       </div>
     </Router>
   );
