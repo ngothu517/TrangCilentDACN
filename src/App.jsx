@@ -11,6 +11,7 @@ import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import OrderDetail from "./pages/OrderDetail";
 import ChatBot from "./components/ChatBot";
+
 export default function App() {
   return (
     <Router>
